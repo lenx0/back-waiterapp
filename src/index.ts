@@ -10,6 +10,12 @@ mongoose.connect('mongodb+srv://waiterappmongo:q6UoTxWxPYahY2JD@cluster0.ybga9.m
   const app = express();
   const port = 3001;
 
+  app.use((req, res) => {
+    res.setHeader('Acess-Control-Allow-Origin', '*')
+    res.setHeader('Acess-Control-Allow-Methods', '*')
+    res.setHeader('Acess-Control-Allow-Headers', '*')
+  })
+
   app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
   app.use(express.json());
   app.use(router);
