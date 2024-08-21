@@ -1,32 +1,41 @@
-
-import path from 'node:path';
+import path from "node:path";
+import http from "node:http";
 import express from "express";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import { Server } from "socket.io";
 
-import { router } from './router'
+import { router } from "./router";
 
-mongoose.connect('mongodb+srv://waiterappmongo:q6UoTxWxPYahY2JD@cluster0.ybga9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
-.then(() => {
-  const app = express();
-  const port = 3001;
+const app = express();
+    const server = http.createServer(app);
+    export const io = new Server(server);
 
-  app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', '*')
-    res.setHeader('Access-Control-Allow-Headers', '*')
+mongoose
+  .connect(
+    "mongodb+srv://waiterappmongo:q6UoTxWxPYahY2JD@cluster0.ybga9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+  )
+  .then(() => {
+    const port = 3001;
 
-    next();
+
+    app.use((req, res, next) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "*");
+      res.setHeader("Access-Control-Allow-Headers", "*");
+
+      next();
+    });
+
+    app.use(
+      "/uploads",
+      express.static(path.resolve(__dirname, "..", "uploads"))
+    );
+    app.use(express.json());
+    app.use(router);
+
+    server.listen(port, () => {
+      console.log("MongoDB is connected");
+      console.log(`Server is running on port ${port}`);
+    });
   })
-
-  app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
-  app.use(express.json());
-  app.use(router);
-
-app.listen(port, () => {
-  console.log("MongoDB is connected")
-  console.log(`Server is running on port ${port}`);
-});
-})
-.catch(() => console.log('erro ao contectar ao mongodb'));
-
-
+  .catch(() => console.log("erro ao contectar ao mongodb"));
