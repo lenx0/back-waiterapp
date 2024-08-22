@@ -12,6 +12,9 @@ import { listOrders } from './app/useCases/orders/listOrders';
 import { createOrder } from './app/useCases/orders/createOrder';
 import { changeOrderStatus } from './app/useCases/orders/changeOrderStatus';
 import { cancelOrder } from './app/useCases/orders/cancelOrder';
+import { registerUser } from './app/useCases/users/register';
+import { check } from 'express-validator';
+import { loginUser } from './app/useCases/users/login';
 
 
 export const router = Router();
@@ -53,3 +56,14 @@ router.patch('/orders/:orderId', changeOrderStatus)
 
 //Delete/cancel order
 router.delete('/orders/:orderId', cancelOrder)
+
+router.post('/register', [
+  check('name', 'Nome é obrigatório').not().isEmpty(),
+  check('email', 'Por favor, inclua um email válido').isEmail(),
+  check('password', 'Por favor, inclua uma senha com 6 ou mais caracteres').isLength({ min: 6 }),
+], registerUser)
+
+router.post('/login', [
+  check('email', 'Por favor, inclua um email válido').isEmail(),
+  check('password', 'A senha é obrigatória').exists(),
+], loginUser)
