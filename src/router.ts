@@ -55,7 +55,7 @@ router.post('/orders', createOrder)
 //Change order status
 router.patch('/orders/:orderId', changeOrderStatus)
 
-//Delete/cancel order
+//Delete order
 router.delete('/orders/:orderId', cancelOrder)
 
 router.post('/register', [
