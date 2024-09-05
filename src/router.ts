@@ -15,6 +15,7 @@ import { cancelOrder } from './app/useCases/orders/cancelOrder';
 import { registerUser } from './app/useCases/users/register';
 import { check } from 'express-validator';
 import { loginUser } from './app/useCases/users/login';
+import { listUsers } from './app/useCases/users/listUsers';
 
 
 export const router = Router();
@@ -67,3 +68,6 @@ router.post('/login', [
   check('email', 'Por favor, inclua um email válido').isEmail(),
   check('password', 'A senha é obrigatória').exists(),
 ], loginUser)
+
+//List users
+router.get('/users', listUsers)
